@@ -1,22 +1,20 @@
 import random
-import json
 from datetime import datetime, timedelta
+import json
 
 def generate_conversation():
     sender_types = ["Courier Android", "Customer iOS"]
     courier_id = random.randint(10000000, 99999999)
     customer_id = random.randint(10000000, 99999999)
     order_id = random.randint(10000000, 99999999)
-    message_sent_time = "2024-02-01T10:00:00Z"  # Initial message sent time
+    message_sent_time = generate_unique_time()  # Generate unique message sent time
 
     conversations = []
-    chat_started_by_message = True  #Flag to track the first message in a conversation
+    chat_started_by_message = True  # Flag to track the first message in a conversation
     sender_type = random.choice(sender_types)
-    num_replies = random.randint(2, 5)  #Random number of replies (2, 3, or 5)
+    num_replies = random.randint(2, 5)  # Random number of replies (2, 3, or 5)
 
-    for message_num in range(2, num_replies + 2):
-        order_stage = random.choice(["ACCEPTED", "IN_PROGRESS", "COMPLETED", "CANCELLED", "IN_TRANSIT", "PROCESSING", "DELAYED", "OUT_FOR_DELIVERY", "RETURNED", "AWAITING_PICKUP", "ARRIVED", "FAILED", "PENDING", "ACCEPTED", "ON_ROUTE", "DELIVERED"])
-        
+    for message_num in range(num_replies):
         if sender_type.startswith("Courier"):
             conversation = {
                 "senderAppType": sender_type,
@@ -25,9 +23,9 @@ def generate_conversation():
                 "toId": customer_id,
                 "chatStartedByMessage": chat_started_by_message,
                 "orderId": order_id,
-                "orderStage": order_stage,
+                "orderStage": random.choice(["ACCEPTED", "IN_PROGRESS", "COMPLETED"]),
                 "customerId": customer_id,
-                "messageSentTime": message_sent_time
+                "messageSentTime": message_sent_time.strftime("%Y-%m-%dT%H:%M:%SZ")
             }
         else:
             conversation = {
@@ -37,57 +35,67 @@ def generate_conversation():
                 "toId": courier_id,
                 "chatStartedByMessage": chat_started_by_message,
                 "orderId": order_id,
-                "orderStage": order_stage,
+                "orderStage": random.choice(["ACCEPTED", "IN_PROGRESS", "COMPLETED"]),
                 "courierId": courier_id,
-                "messageSentTime": message_sent_time
+                "messageSentTime": message_sent_time.strftime("%Y-%m-%dT%H:%M:%SZ")
             }
-        
+
         conversations.append(conversation)
-        chat_started_by_message = False  #Update flag for subsequent messages
-        message_sent_time = increment_message_sent_time(message_sent_time)
+        chat_started_by_message = False  # Update flag for subsequent messages
 
         if sender_type.startswith("Courier"):
             sender_type = "Customer iOS"
         else:
             sender_type = "Courier Android"
 
-    #Add additional line with city code
+        # Increment the message sent time by a random duration between 1 second and 1 minute
+        message_sent_time += timedelta(seconds=random.randint(1, 60))
+
+    # Add additional line with city code
     city_line = {
         "orderId": order_id,
         "cityCode": random_city_code()
     }
     conversations.append(city_line)
-    
+
     return conversations
 
+def generate_unique_time():
+    global last_message_sent_time
+
+    # Increment the last message sent time by a random duration between 1 second and 1 minute
+    last_message_sent_time += timedelta(seconds=random.randint(1, 60))
+    return last_message_sent_time
+
 def random_city_code():
-    #Returns a random world city code
-    city_codes = ["BCN", "NYC", "LON", "PAR", "BER", "TOK", "ROM", "MAD", "SYD", "MEX", "CAI", "AMS", "TOR", "IST", "SAN", "SIN", "RIO", "BUE", "CPT", "MUM"]
-    return random.choice(city_codes)
+    cities = ["BCN", "NYC", "LON", "PAR", "BER", "TOK", "ROM", "MAD", "SYD", "MEX", "CAI", "AMS", "TOR", "IST", "SAN", "SIN", "RIO", "BUE", "CPT", "MUM"]
+    return random.choice(cities)
 
-def increment_message_sent_time(timestamp):
-    #Increment the message sent time by a random duration between 1 minute and 15 minutes
-    #Assumes the timestamp is in the format "YYYY-MM-DDTHH:MM:SSZ"
-    message_sent_datetime = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-    random_duration = random.randint(1, 15)  # Random duration in minutes
-    message_sent_datetime += timedelta(minutes=random_duration)
-    message_sent_time = message_sent_datetime.strftime("%Y-%m-%dT%H:%M:%SZ")
-    
-    return message_sent_time
+# Set the initial message sent time
+last_message_sent_time = datetime(2024, 2, 1, 10, 0, 0)
 
-#Generate 40000 conversations
-all_messages = []
-for _ in range(40000):
-    messages = generate_conversation()
-    all_messages.extend(messages)
-    #Generate a new unique order ID for the next set of conversations
-    order_id = random.randint(10000000, 99999999)
+# Generate and save 400 conversations
+conversations = []
+for _ in range(400):
+    conversation = generate_conversation()
+    conversations.extend(conversation)
 
-#Output conversations as JSON in a single line
-output_filename = "conversations.json"
+# Output conversations as JSON in a single line
+output_filename = "conversations_400_single_line.json"
 with open(output_filename, "w") as file:
-    for message in all_messages:
+    for message in conversations:
         json.dump(message, file, separators=(",", ":"))
         file.write("\n")
 
-print(f"{len(all_messages)} conversations generated and saved to {output_filename}.")
+print("Conversations saved to 'conversations_400_single_line.json'")
+
+#Example of the data
+```json
+{"senderAppType":"Courier Android","courierId":20067661,"fromId":20067661,"toId":49459478,"chatStartedByMessage":true,"orderId":69409879,"orderStage":"COMPLETED","customerId":49459478,"messageSentTime":"2024-02-01T10:00:07Z"}
+{"senderAppType":"Customer iOS","customerId":49459478,"fromId":49459478,"toId":20067661,"chatStartedByMessage":false,"orderId":69409879,"orderStage":"ACCEPTED","courierId":20067661,"messageSentTime":"2024-02-01T10:00:53Z"}
+{"senderAppType":"Courier Android","courierId":20067661,"fromId":20067661,"toId":49459478,"chatStartedByMessage":false,"orderId":69409879,"orderStage":"IN_PROGRESS","customerId":49459478,"messageSentTime":"2024-02-01T10:01:22Z"}
+{"orderId":69409879,"cityCode":"MUM"}
+{"senderAppType":"Customer iOS","customerId":62201746,"fromId":62201746,"toId":62321860,"chatStartedByMessage":true,"orderId":13379272,"orderStage":"COMPLETED","courierId":62321860,"messageSentTime":"2024-02-01T10:00:46Z"}
+{"senderAppType":"Courier Android","courierId":62321860,"fromId":62321860,"toId":62201746,"chatStartedByMessage":false,"orderId":13379272,"orderStage":"IN_PROGRESS","customerId":62201746,"messageSentTime":"2024-02-01T10:01:06Z"}
+{"orderId":13379272,"cityCode":"BER"}
+```
