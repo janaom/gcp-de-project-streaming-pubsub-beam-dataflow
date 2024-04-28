@@ -23,7 +23,7 @@ def generate_conversation():
                 "toId": customer_id,
                 "chatStartedByMessage": chat_started_by_message,
                 "orderId": order_id,
-                "orderStage": random.choice(["ACCEPTED", "IN_PROGRESS", "COMPLETED"]),
+                "orderStage": random.choice(["ACCEPTED", "IN_PROGRESS", "COMPLETED", "CANCELLED", "IN_TRANSIT", "PROCESSING", "DELAYED", "OUT_FOR_DELIVERY", "RETURNED", "AWAITING_PICKUP", "ARRIVED", "FAILED", "PENDING", "ACCEPTED", "ON_ROUTE", "DELIVERED"]),
                 "customerId": customer_id,
                 "messageSentTime": message_sent_time.strftime("%Y-%m-%dT%H:%M:%SZ")
             }
@@ -35,7 +35,7 @@ def generate_conversation():
                 "toId": courier_id,
                 "chatStartedByMessage": chat_started_by_message,
                 "orderId": order_id,
-                "orderStage": random.choice(["ACCEPTED", "IN_PROGRESS", "COMPLETED"]),
+                "orderStage": random.choice(["ACCEPTED", "IN_PROGRESS", "COMPLETED", "CANCELLED", "IN_TRANSIT", "PROCESSING", "DELAYED", "OUT_FOR_DELIVERY", "RETURNED", "AWAITING_PICKUP", "ARRIVED", "FAILED", "PENDING", "ACCEPTED", "ON_ROUTE", "DELIVERED"]),
                 "courierId": courier_id,
                 "messageSentTime": message_sent_time.strftime("%Y-%m-%dT%H:%M:%SZ")
             }
