@@ -192,7 +192,8 @@ The time it takes for the streamed data to be fully committed and visible in the
 
 In the provided example, the updated information becomes visible in the "Storage info" section.
 
-![1 bdnvt1lkwE91iiCbmQWGdQ](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/e7136d0e-cf4d-409c-804d-3996220a8192)
+![1 NDYjPiI7HAgPbLboYfIVRw](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/ceb1dcfd-22a2-4073-b237-3021b0e86dc0)
+
 
 # 🧮 Querying the Output Table
 The final step involves creating the "customer_courier_conversations" table. In this case, we will generate a [view](https://cloud.google.com/bigquery/docs/views-intro), which is a virtual table defined by a SQL query. The custom SQL code will help transform the data to meet the specific task requirements.
