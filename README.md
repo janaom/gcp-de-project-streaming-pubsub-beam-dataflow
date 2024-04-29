@@ -53,7 +53,7 @@ Using the prepared data, we will simulate the streaming of Courier and Customer 
 {"senderAppType": "Customer iOS", "customerId": 40874303, "fromId": 40874303, "toId": 61404437, "chatStartedByMessage": false, "orderId": 10000632, "orderStage": "ACCEPTED", "courierId": 61404437, "messageSentTime": "2024-02-01T10:35:00Z"}
 ```
 
-Your task is to build a data pipeline to aggregate individual messages into conversations. Take into consideration that a conversation is unique per order. We aim to split the data into two tables: "conversations" and "orders". This separation will facilitate future analytics and data processing. The output table "customer_courier_conversations" should include the following required fields:
+Your task is to build a data pipeline to aggregate individual messages into conversations. Take into consideration that a conversation is unique per order. We aim to split the data into two tables: "conversations" and "orders". This separation will facilitate future analytics and data processing. The final table "customer_courier_conversations" should include the following required fields:
 
 ```
 ● order_id
@@ -195,7 +195,7 @@ In the provided example, the updated information becomes visible in the "Storage
 ![1 NDYjPiI7HAgPbLboYfIVRw](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/ceb1dcfd-22a2-4073-b237-3021b0e86dc0)
 
 
-# 🧮 Querying the Output Table
+# 🧮 Querying the Final Table
 The final step involves creating the "customer_courier_conversations" table. In this case, we will generate a [view](https://cloud.google.com/bigquery/docs/views-intro), which is a virtual table defined by a SQL query. The custom SQL code will help transform the data to meet the specific task requirements.
 
 ![1 7SFCGTdJLBsjC1I7am3h7Q](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/b7b88fdd-0272-401c-ab25-e754c5345a20)
