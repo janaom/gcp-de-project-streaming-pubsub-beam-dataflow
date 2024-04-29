@@ -183,7 +183,8 @@ Executing the provided code (`python send-data-to-pubsub.py` and `python streami
 # ⏯️ BigQuery Streaming Buffer
 By default, BigQuery stores streaming data in a special storage location called the "streaming buffer." The streaming buffer is a temporary storage area that holds the incoming data for a short period before it is fully committed and becomes part of the permanent table.
 
-![1 bIh4kg2tn7_7WvVb3BIuqQ](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/67472677-0ae2-4736-b123-add3485c8e7f)
+![1 g4PjtluUvzrwRtpdpEziEA](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/0d5b4e86-c01b-485b-b7c5-8a88d07e4f3a)
+
 
 When you stop streaming data, the data in the streaming buffer is no longer continuously updated. BigQuery then starts the process of flushing the buffered data into the main table storage. The data is also reorganized and compressed for efficient storage. This process ensures data consistency and integrity before fully committing it to the table.
 
@@ -196,7 +197,8 @@ In the provided example, the updated information becomes visible in the "Storage
 # 🧮 Querying the Output Table
 The final step involves creating the "customer_courier_conversations" table. In this case, we will generate a [view](https://cloud.google.com/bigquery/docs/views-intro), which is a virtual table defined by a SQL query. The custom SQL code will help transform the data to meet the specific task requirements.
 
-![1 sjUOhX7Ot-DglYGm8tIfBA](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/ea06a113-1d5b-4e03-9069-bd737f63aec7)
+![1 7SFCGTdJLBsjC1I7am3h7Q](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/b7b88fdd-0272-401c-ab25-e754c5345a20)
+
 
 Views are virtual references to a set of data, offering reusable access without physically storing the data. [Materialized views](https://cloud.google.com/bigquery/docs/materialized-views-intro), on the other hand, are defined using SQL like regular views but physically store the data. However, they come with [limitations](https://cloud.google.com/bigquery/docs/materialized-views-intro#comparison) in query support. Due to the substantial size of my query, opting for a regular view was the more suitable choice in this case.
 
@@ -206,51 +208,53 @@ Once the streaming process has been initiated, you can execute the saved view af
 SELECT * FROM `your-project-id.dataset.view`
 ```
 
-Let's examine the first row from the results by extracting all messages associated with the "orderId" 46931114 from the "conversations.json" file.
+Let's examine the first row from the results by extracting all messages associated with the "orderId" 77656162 from the "conversations.json" file.
 
-![1 hepxJ4V03n0Huqv8KmdVAA](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/bb6908dc-575d-447a-8277-2273b63505dc)
+![1 G-LpAKxAmGHTShp743ed7A](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/74e59371-a38f-42ff-a6e6-e80dfa871b1b)
 
-The analysis yielded the following results: a total of 5 messages were identified. The conversation commenced with a Courier message at 10:04:25. The Customer responded after 39 seconds, at 10:05:04. The final message was received from the Courier at 10:06:08, and the last "orderStage" was recorded as "ACCEPTED."
+
+The analysis yielded the following results: a total of 5 messages were identified. The conversation commenced with a Courier message in Rome at 10:04:46. The Customer responded after 42 seconds, at 10:05:28. The final message was received from the Courier at 10:06:35, and the last message order stage was recorded as "FAILED".
 
 ```json
-{"senderAppType": "Courier Android", "courierId": 24114839, "fromId": 24114839, "toId": 33165556, "chatStartedByMessage": true, "orderId": 46931114, "orderStage": "ACCEPTED", "customerId": 33165556, "messageSentTime": "2024-02-01T10:04:25Z"}
-{"orderId": 46931114, "cityCode": "TOR"}
-{"senderAppType": "Customer iOS", "customerId": 33165556, "fromId": 33165556, "toId": 24114839, "chatStartedByMessage": false, "orderId": 46931114, "orderStage": "IN_PROGRESS", "courierId": 24114839, "messageSentTime": "2024-02-01T10:05:04Z"}
-{"senderAppType": "Courier Android", "courierId": 24114839, "fromId": 24114839, "toId": 33165556, "chatStartedByMessage": false, "orderId": 46931114, "orderStage": "ACCEPTED", "customerId": 33165556, "messageSentTime": "2024-02-01T10:05:25Z"}
-{"senderAppType": "Customer iOS", "customerId": 33165556, "fromId": 33165556, "toId": 24114839, "chatStartedByMessage": false, "orderId": 46931114, "orderStage": "IN_PROGRESS", "courierId": 24114839, "messageSentTime": "2024-02-01T10:05:44Z"}
-{"senderAppType": "Courier Android", "courierId": 24114839, "fromId": 24114839, "toId": 33165556, "chatStartedByMessage": false, "orderId": 46931114, "orderStage": "ACCEPTED", "customerId": 33165556, "messageSentTime": "2024-02-01T10:06:08Z"}
+{"senderAppType": "Courier Android", "courierId": 45035010, "fromId": 45035010, "toId": 57270753, "chatStartedByMessage": true, "orderId": 77656162, "orderStage": "AWAITING_PICKUP", "customerId": 57270753, "messageSentTime": "2024-02-01T10:04:46Z"}
+{"orderId": 77656162, "cityCode": "ROM"}
+{"senderAppType": "Customer iOS", "customerId": 57270753, "fromId": 57270753, "toId": 45035010, "chatStartedByMessage": false, "orderId": 77656162, "orderStage": "DELAYED", "courierId": 45035010, "messageSentTime": "2024-02-01T10:05:28Z"}
+{"senderAppType": "Courier Android", "courierId": 45035010, "fromId": 45035010, "toId": 57270753, "chatStartedByMessage": false, "orderId": 77656162, "orderStage": "ACCEPTED", "customerId": 57270753, "messageSentTime": "2024-02-01T10:05:31Z"}
+{"senderAppType": "Customer iOS", "customerId": 57270753, "fromId": 57270753, "toId": 45035010, "chatStartedByMessage": false, "orderId": 77656162, "orderStage": "DELAYED", "courierId": 45035010, "messageSentTime": "2024-02-01T10:06:16Z"}
+{"senderAppType": "Courier Android", "courierId": 45035010, "fromId": 45035010, "toId": 57270753, "chatStartedByMessage": false, "orderId": 77656162, "orderStage": "FAILED", "customerId": 57270753, "messageSentTime": "2024-02-01T10:06:35Z"}
 ```
 
 Please note that, in my case, the time difference between the first and last messages was only 2 minutes, resulting in a relatively quick analysis. As new data is continuously streaming into the source, the view is automatically updated in real-time to reflect the changes. This means that whenever you query the view, you will get the most up-to-date data that matches the defined criteria.
 
 To gain further insights into the dynamic nature of the streaming process, let's examine additional examples and observe how the results evolve over time.
 
-![1 FenxxW_92K55pvYSKL7rIg](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/39183611-6e29-47b0-bc17-dcac6d4de8c8)
+![1 QRnvMHwBdOKcmfP11bWeXw](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/bbfdd566-6cb2-49ea-ba0f-110ababd7f60)
 
-In the first example, the conversation associated with "orderId" 10101651 commenced with a Customer message at 10:06:57. At this point, no response from the Courier has been received.
-The second example shows that the Courier initiated the conversation related to "orderId" 23168367 at 10:07:43.
+
+In the first example, the conversation associated with "orderId" 66096282 in Tokyo commenced with a Courier message at 10:38:50. At this point, no response from the Customer has been received. The last message order stage is shown as "OUT_FOR_DELIVERY".
+
 To observe any changes, let's execute the view once again and compare the results.
 
-![1 4b7WCDToIHfQrdIzWcWCPQ](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/868fb495-b723-4d58-b9ce-3eeeebde5e9e)
+![1 zROM0ndny_c4DQRkz0mTdg](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/289c77a2-37e4-4650-add1-bd0bfa0f6e13)
 
-For order 10101651, a Courier reply was received at 10:07:56. Although the view indicates that the last message was sent at 10:08:24, a closer examination of the JSON file reveals that the actual last message was sent at 10:09:08, which hasn't been received yet. Additionally, expect the number of messages to be updated shortly.
 
-```json
-{"senderAppType": "Customer iOS", "customerId": 74968479, "fromId": 74968479, "toId": 15311492, "chatStartedByMessage": true, "orderId": 10101651, "orderStage": "ACCEPTED", "courierId": 15311492, "messageSentTime": "2024-02-01T10:06:57Z"}
-{"orderId": 10101651, "cityCode": "SIN"}
-{"senderAppType": "Courier Android", "courierId": 15311492, "fromId": 15311492, "toId": 74968479, "chatStartedByMessage": false, "orderId": 10101651, "orderStage": "ACCEPTED", "customerId": 74968479, "messageSentTime": "2024-02-01T10:07:56Z"}
-{"senderAppType": "Customer iOS", "customerId": 74968479, "fromId": 74968479, "toId": 15311492, "chatStartedByMessage": false, "orderId": 10101651, "orderStage": "ACCEPTED", "courierId": 15311492, "messageSentTime": "2024-02-01T10:08:24Z"}
-{"senderAppType": "Courier Android", "courierId": 15311492, "fromId": 15311492, "toId": 74968479, "chatStartedByMessage": false, "orderId": 10101651, "orderStage": "IN_PROGRESS", "customerId": 74968479, "messageSentTime": "2024-02-01T10:09:08Z"}
-```
+A Customer reply was received at 10:39:30. Although the view indicates that the last message was sent at 10:39:45 with the status "PENDING", a closer examination of the JSON file reveals that the actual last message will be sent at 10:41:07, which hasn't been received yet. Additionally, expect the number of messages to be updated shortly.
 
-Regarding order 23168367, a response from the Customer was received at 10:08:14. The last message was indeed sent at 10:08:23. This conversation includes 2 messages from the Courier and 1 from the Customer.
+Let's execute the view one more time.
+
+![1 jV6tijubvOGB6-xjfQLTbQ](https://github.com/janaom/gcp-de-project-streaming-beam-dataflow-pubsub/assets/83917694/205087dc-4963-427d-95a1-be4a552aae1b)
+
+Here we see that all 5 messages have been received, and the last message order stage now is "ACCEPTED". 🥳
 
 ```json
-{"senderAppType": "Courier Android", "courierId": 88888681, "fromId": 88888681, "toId": 69495463, "chatStartedByMessage": true, "orderId": 23168367, "orderStage": "ACCEPTED", "customerId": 69495463, "messageSentTime": "2024-02-01T10:07:43Z"}
-{"orderId": 23168367, "cityCode": "AMS"}
-{"senderAppType": "Customer iOS", "customerId": 69495463, "fromId": 69495463, "toId": 88888681, "chatStartedByMessage": false, "orderId": 23168367, "orderStage": "ACCEPTED", "courierId": 88888681, "messageSentTime": "2024-02-01T10:08:14Z"}
-{"senderAppType": "Courier Android", "courierId": 88888681, "fromId": 88888681, "toId": 69495463, "chatStartedByMessage": false, "orderId": 23168367, "orderStage": "ACCEPTED", "customerId": 69495463, "messageSentTime": "2024-02-01T10:08:23Z"}
+{"senderAppType": "Courier Android", "courierId": 64897260, "fromId": 64897260, "toId": 55461000, "chatStartedByMessage": true, "orderId": 66096282, "orderStage": "OUT_FOR_DELIVERY", "customerId": 55461000, "messageSentTime": "2024-02-01T10:38:50Z"}
+{"orderId": 66096282, "cityCode": "TOK"}
+{"senderAppType": "Customer iOS", "customerId": 55461000, "fromId": 55461000, "toId": 64897260, "chatStartedByMessage": false, "orderId": 66096282, "orderStage": "ACCEPTED", "courierId": 64897260, "messageSentTime": "2024-02-01T10:39:30Z"}
+{"senderAppType": "Courier Android", "courierId": 64897260, "fromId": 64897260, "toId": 55461000, "chatStartedByMessage": false, "orderId": 66096282, "orderStage": "PENDING", "customerId": 55461000, "messageSentTime": "2024-02-01T10:39:45Z"}
+{"senderAppType": "Customer iOS", "customerId": 55461000, "fromId": 55461000, "toId": 64897260, "chatStartedByMessage": false, "orderId": 66096282, "orderStage": "IN_PROGRESS", "courierId": 64897260, "messageSentTime": "2024-02-01T10:40:37Z"}
+{"senderAppType": "Courier Android", "courierId": 64897260, "fromId": 64897260, "toId": 55461000, "chatStartedByMessage": false, "orderId": 66096282, "orderStage": "ACCEPTED", "customerId": 55461000, "messageSentTime": "2024-02-01T10:41:07Z"}
 ```
+
 
 To experiment with larger data, you can access the `generate-the-data.py` code on my GitHub repository. This code allows you to generate additional conversations, enabling you to test the project's scalability.🤖
 
