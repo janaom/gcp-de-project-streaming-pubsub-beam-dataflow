@@ -40,7 +40,7 @@ Additionally, you have access to the "orders" event, which contains the "orderId
 }
 ```
 
-Using the prepared data, we will simulate the streaming of Courier and Customer conversations. We have 400 conversations in total, with the first message coming from either the Courier or the Customer. This initial message is followed by another important message that contains the "orderId" and "cityCode". Subsequent messages will then appear in chronological order, with each conversation consisting of 2–5 messages. If you're interested in the original data generation process, you can find the code on my GitHub repository.  is an example of a complete conversation:
+Using the prepared data, we will simulate the streaming of Courier and Customer conversations. We have 400 conversations in total, with the first message coming from either the Courier or the Customer. This initial message is followed by another important message that contains the "orderId" and "cityCode". Subsequent messages will then appear in chronological order, with each conversation consisting of 2–5 messages. If you're interested in the original data generation process, you can find the code on my GitHub repository. Here is an example of a complete conversation:
 
 ```json
 {"senderAppType": "Courier Android", "courierId": 61404437, "fromId": 61404437, "toId": 40874303, "chatStartedByMessage": true, "orderId": 10000632, "orderStage": "IN_PROGRESS", "customerId": 40874303, "messageSentTime": "2024-02-01T10:00:00Z"}
